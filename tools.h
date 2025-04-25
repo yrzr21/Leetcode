@@ -9,7 +9,6 @@
 #include <vector>
 using namespace std;
 
-
 struct ListNode {
     int val;
     ListNode* next;
@@ -66,3 +65,13 @@ void print_list(T* head) {
     }
     cout << endl;
 }
+
+template <class T>
+void print_vec(vector<T> vec) {
+    for (auto ele : vec) {
+        cout << ele << " ";
+    }
+    cout << endl;
+}
+
+using vec_int = std::vector<int>;
