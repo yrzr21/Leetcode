@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 using namespace std;
 
@@ -36,6 +37,34 @@ class Solution {
             while (i != size - 2 && -nums[i] == target) i++;
         }
         return ans;
+    }
+};
+
+// 复习1
+class Solution1 {
+   public:
+    vector<vector<int>> threeSum(vector<int> &nums) {
+        // 拿到一个数nums[i]作为target，查看后面的数组中有没有和等于它的
+        // set存所有数字，加速查找
+        // 避免重复？ 排个序，然后看看重复的在不在
+        unordered_set<int> set;
+        for (int num : nums) {
+            set.insert(num);
+        }
+        sort(nums.begin(), nums.end());
+
+
+        vector<vector<int>> ans;
+        for (size_t i = 0; i < nums.size(); i++) {
+            int index = i;
+            int neg_target = nums[i];  // target=-nums[i]
+            while (nums[i] == neg_target) i++;
+            int n_same = i - index;
+
+            if(n_same>=3 && an) 
+
+
+        }
     }
 };
 
