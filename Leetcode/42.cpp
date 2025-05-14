@@ -53,6 +53,38 @@ class Solution {
     }
 };
 
+// 复习1
+class Solution1 {
+   public:
+    int trap(vector<int>& height) {
+        // 容量=(最矮边界高度-底部高度)*宽度
+        // 当前高度>栈顶且栈至少有两个值，计算容量
+        // =栈顶，不管
+        // < ||栈空，入栈
+
+        stack<int> left;  // index, 高度严格单调减
+        int ans = 0;
+        for (size_t i = 0; i < height.size(); i++) {
+            // capacity
+            while (left.size() > 1 && height[i] > height[left.top()]) {
+                int bottom = height[left.top()];
+                left.pop();
+
+                int l = left.top();
+                int h = min(height[l], height[i]) - bottom;
+                int w = i - l - 1;
+
+                ans +=  h * w;
+            }
+            // size<=1 || <= top element
+            //  非空且>=栈顶，则出栈再入栈
+            if (!left.empty() && height[i] >= height[left.top()]) left.pop();
+            left.push(i);
+        }
+        return ans;
+    }
+};
+
 int main(int argc, char const* argv[]) {
     vector<int> v{4, 2, 0, 3, 2, 5};
     cout << Solution().trap(v);

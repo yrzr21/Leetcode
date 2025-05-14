@@ -44,27 +44,91 @@ class Solution {
 class Solution1 {
    public:
     vector<vector<int>> threeSum(vector<int> &nums) {
-        // 拿到一个数nums[i]作为target，查看后面的数组中有没有和等于它的
+        // 拿到一个数nums[i]作为target，查看后面的数组中有没有和等于它的负的
         // set存所有数字，加速查找
-        // 避免重复？ 排个序，然后看看重复的在不在
-        unordered_set<int> set;
-        for (int num : nums) {
-            set.insert(num);
+        // 避免重复？ 排个序，按从小到大的顺序处理
+        // 加速两数之和：set+枚举第二个数
+
+        int n = nums.size();
+        unordered_multiset<int> set;
+        for (int num : nums) set.insert(num);
+
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> ans;
+        if (set.count(0) >= 3) ans.push_back({0, 0, 0});
+
+        for (size_t i = 0; i < n;) {
+            // x<y<z
+            int x = nums[i], x_cnt = set.count(x);  // min element
+            if (x >= 0) break;
+            // x<0
+
+            if (x_cnt >= 2 && set.contains(-2 * x)) {
+                // 2个x
+                ans.push_back({x, x, -2 * x});
+            }
+
+            // 1个x
+            for (int j = i + x_cnt; j < n;) {
+                int y = nums[j], y_cnt = set.count(y);
+                if (x + y >= 0) break;
+                // x+y<0
+
+                if (y > 0 && y_cnt >= 2 && x + y + y == 0) {
+                    // 2个y：y必须大于0，与1个y的情形不兼容
+                    ans.push_back({x, y, y});
+                } else {
+                    // 1个y
+                    int z = -x - y;
+                    if (z > y && set.contains(z)) ans.push_back({x, y, z});
+                }
+
+                j += y_cnt;
+            }
+
+            i += x_cnt;
         }
+
+        return ans;
+    }
+};
+
+class Solution2 {
+   public:
+    vector<vector<int>> threeSum(vector<int> &nums) {
+        // 拿到一个数nums[i]作为target，查看后面的数组中有没有和等于它的负的
+        // 避免重复？ 排个序，按从小到大的顺序处理
+        // x+y+z=0,
+        // x<=y<=z，先确定x，只要y确定则z确定，为避免重复，每次找到ans都要跳过相等的y
         sort(nums.begin(), nums.end());
 
+        int n = nums.size();
 
         vector<vector<int>> ans;
-        for (size_t i = 0; i < nums.size(); i++) {
-            int index = i;
-            int neg_target = nums[i];  // target=-nums[i]
-            while (nums[i] == neg_target) i++;
-            int n_same = i - index;
+        for (size_t i = 0; i < n - 2;) {
+            int x = nums[i];
+            if (x > 0) break;
 
-            if(n_same>=3 && an) 
+            int l = i + 1, r = n - 1;
+            while (l < r) {
+                int y = nums[l], z = nums[r];
+                if (z < 0 || x + y + y > 0) break;
 
+                if (x + y + z > 0) {
+                    r--;
+                } else if (x + y + z < 0) {
+                    l++;
+                } else {
+                    ans.push_back({x, y, z});
+                    while (l < r && nums[l] == y) l++;
+                    while (l < r && nums[r] == z) r--;
+                }
+            }
 
+            while (i < n - 2 && nums[i] == x) i++;
         }
+
+        return ans;
     }
 };
 
